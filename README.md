@@ -1,3 +1,10 @@
 # azure-resume-project
+My own azure resume, folling ACG project video.
 
-Testing resume commit 
+## First steps
+- Frontend folder contains the website.
+- main.js contains visitor counter code.
+
+```js
+const
+```
