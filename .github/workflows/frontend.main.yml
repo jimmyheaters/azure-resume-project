@@ -1,38 +1,33 @@
-name: deploy_frontend
-# Deploys when push is made from frontend folder
+name: Blob storage website CI
 
 on:
     push:
         branches: [ main ]
-        paths: 
+        paths:
         - 'frontend/**'
-    
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    steps:            
+    steps:
     - uses: actions/checkout@v2
-    - name: login with azure 
-      uses: azure/login@v1
+    - uses: azure/login@v1
       with:
-        creds: ${{ secrets.AZURE_CREDENTIALS }}
-    
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
 
     - name: Upload to blob storage
       uses: azure/CLI@v1
       with:
-        azcliversion: 2.30.0
         inlineScript: |
-            az storage blob upload-batch --account-name <azureresumestoragebd> -d '$web' -s frontend/
+            az storage blob upload-batch --account-name azureresumestoragebd -d '$web' -s frontend/
     - name: Purge CDN endpoint
       uses: azure/CLI@v1
       with:
-        azcliversion: 2.30.0
         inlineScript: |
            az cdn endpoint purge --content-paths  "/*" --profile-name "azureresumebd" --name "azureresumebd" --resource-group "azureresume-rg"
 
-  # Azure logout 
+  # Azure logout
     - name: logout
       run: |
             az logout
+      if: always()
